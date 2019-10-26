@@ -9,31 +9,59 @@
 import SwiftUI
 
 struct ContentView: View {
+    private let letters = Array("Hello SwiftUI")
+
     @State private var animationAmount: CGFloat = 1
+    @State private var enabled = false
+    @State private var dragAmount = CGSize.zero
 
     var body: some View {
-        VStack{
-        Spacer()
-        Button("Tap Me") {
-            // Do something
-        }
-        .padding(40)
-        .background(Color.red)
-        .foregroundColor(.white)
-        .clipShape(Circle())
-        .overlay(
-            Circle()
-                .stroke(Color.red)
-                .scaleEffect(animationAmount)
-                .opacity(Double(2 - animationAmount))
-                .animation(
-                    Animation.easeOut(duration: 1)
-                        .repeatForever(autoreverses: false)
+
+        ZStack{
+            HStack{
+                ForEach(0..<letters.count) { num in
+                    Text(String(self.letters[num]))
+                        .padding(5)
+                        .font(.title)
+                        .background(self.enabled ? Color.blue : Color.red)
+                        .offset(self.dragAmount)
+                        .animation(Animation.default.delay(Double(num) / 20))
+                }
+
+            }
+            .gesture(
+                DragGesture()
+                    .onChanged { self.dragAmount = $0.translation }
+                    .onEnded { _ in
+                        self.dragAmount = .zero
+                        self.enabled.toggle()
+                }
+            )
+
+
+            VStack{
+                Spacer()
+                Button("Tap Me") {
+                    // Do something
+                }
+                .padding(40)
+                .background(Color.red)
+                .foregroundColor(.white)
+                .clipShape(Circle())
+                .overlay(
+                    Circle()
+                        .stroke(Color.red)
+                        .scaleEffect(animationAmount)
+                        .opacity(Double(2 - animationAmount))
+                        .animation(
+                            Animation.easeOut(duration: 1)
+                                .repeatForever(autoreverses: false)
+                    )
                 )
-        )
-        .onAppear {
-            self.animationAmount = 2
-        }
+                    .onAppear {
+                        self.animationAmount = 2
+                }
+            }
         }
     }
 }
