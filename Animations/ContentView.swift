@@ -14,6 +14,7 @@ struct ContentView: View {
     @State private var animationAmount: CGFloat = 1
     @State private var enabled = false
     @State private var dragAmount = CGSize.zero
+    @State private var buttonState = true
 
     var body: some View {
 
@@ -42,10 +43,10 @@ struct ContentView: View {
             VStack{
                 Spacer()
                 Button("Tap Me") {
-                    // Do something
+                    self.buttonState.toggle()
                 }
                 .padding(40)
-                .background(Color.red)
+                .background(buttonState ? Color.red : Color.blue)
                 .foregroundColor(.white)
                 .clipShape(Circle())
                 .overlay(
